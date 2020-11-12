@@ -1,12 +1,13 @@
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <unistd.h>
 #include <getopt.h>
-#include <dir.h>
+#include <limits.h>
 #include "CApp.h"
 
 typedef struct config {
-    char source[_MAX_PATH], output[_MAX_PATH], directory[_MAX_PATH];
+    char source[PATH_MAX], output[PATH_MAX], directory[PATH_MAX];
 } config;
 
 int defaultconfig(config *conf) {
@@ -54,13 +55,13 @@ int main(int argc, char *argv[])
             exit(0);
             break;
         case 's':
-            strncpy(conf->source, optarg, _MAX_PATH);
+            strncpy(conf->source, optarg, PATH_MAX);
             break;
         case 'o':
-            strncpy(conf->output, optarg, _MAX_PATH);
+            strncpy(conf->output, optarg, PATH_MAX);
             break;
         case 'd':
-            strncpy(conf->directory, optarg, _MAX_PATH);
+            strncpy(conf->directory, optarg, PATH_MAX);
             break;
 
         default:
