@@ -1,12 +1,23 @@
+#define _CRT_SECURE_NO_WARNINGS
+#pragma warning(suppress : 4996)
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#ifdef _WIN32
+#pragma warning(disable : 4996)
+#include "ltools/ltools.h"
+#include <direct.h>
+#define chdir _chdir
+
+#endif
+#ifdef __linux__
 #include <unistd.h>
 #include <getopt.h>
+#endif
 #include <limits.h>
 #include "CApp.h"
 
-typedef struct config {
+    typedef struct config {
     char source[PATH_MAX], output[PATH_MAX], directory[PATH_MAX];
 } config;
 
@@ -70,8 +81,19 @@ int main(int argc, char *argv[])
         option_index = -1;
     }
     FILE *input = fopen(conf->source, "rt");
-    chdir(conf->directory);
+    if (input == NULL) {
+        printf("file %s not found\n", conf->source);
+        exit(1);
+    }
+    if(_chdir(conf->directory) == -1) {
+        printf("path %s not found\n", conf->directory);
+        exit(1);
+    }
     FILE *output = fopen(conf->output, "wb");
+    if (input == NULL) {
+        printf("file %s not crated\n", conf->output);
+        exit(1);
+    }
     delete conf;
     CApp capp(input, output);
     
