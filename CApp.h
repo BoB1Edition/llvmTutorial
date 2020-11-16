@@ -5,6 +5,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
+#include <map>
+
+#include "AST/abstract.h"
 
 
 class CApp
@@ -22,10 +25,22 @@ private:
     double NumVal;
     FILE *input, *output;
     int gettok();
+    int CurTok;
+    int  inline getNextToken() { return CurTok = gettok() ; }
+    std::map<char, int> BinopPrecedence;
+
 public:
     CApp(FILE * input, FILE * output);
     char *LexicalAnalyzer();
     ~CApp();
+    ExprAST *ParseNumberExpr();
+    ExprAST *ParseParenExpr();
+    ExprAST *ParseIdentifierExpr();
+    ExprAST *ParsePrimary();
+    inline ExprAST *Error(const char *Str) { return ExprAST::Error(Str); }
+    int GetTokPrecedence();
+    ExprAST *ParseExpression();
+    ExprAST *ParseBinOpRHS(int ExprPrec, ExprAST *LHS);
 };
 
 #endif
